@@ -35,7 +35,6 @@
  *  \return set identifier, upon success
  *  \return -\c 1, when an error occurs (the actual situation is reported in <tt>errno</tt>)
  */
-
 int semCreate (int key, unsigned int snum)
 {
   return semget ((key_t) key, snum+1, MASK | IPC_CREAT | IPC_EXCL);
@@ -51,7 +50,6 @@ int semCreate (int key, unsigned int snum)
  *  \return set identifier, upon success
  *  \return -\c 1, when an error occurs (the actual situation is reported in <tt>errno</tt>)
  */
-
 int semConnect (int key)
 {
   int semgid;                                                                            /* semaphore set identifier */
@@ -74,7 +72,6 @@ int semConnect (int key)
  *  \return \c 0, upon success
  *  \return -\c 1, when an error occurs (the actual situation is reported in <tt>errno</tt>)
  */
-
 int semDestroy (int semgid)
 {
   return semctl (semgid, 0, IPC_RMID, NULL);
@@ -90,7 +87,6 @@ int semDestroy (int semgid)
  *  \return \c 0, upon success
  *  \return -\c 1, when an error occurs (the actual situation is reported in <tt>errno</tt>)
  */
-
 int semSignal (int semgid)
 {
   struct sembuf up = { 0, 1, 0 };                                                         /* all around up operation */
@@ -109,10 +105,9 @@ int semSignal (int semgid)
  *  \return \c 0, upon success
  *  \return -\c 1, when an error occurs (the actual situation is reported in <tt>errno</tt>)
  */
-
 int semDown (int semgid, unsigned int sindex)
 {
-  struct sembuf down = { 0, -1, 0 };                                                      /* specific down operation */
+  struct sembuf down = { 0, -1, 0 };  /* specific down operation */
 
   assert(sindex>0);
   down.sem_num = (unsigned short) sindex;
@@ -130,7 +125,6 @@ int semDown (int semgid, unsigned int sindex)
  *  \return \c 0, upon success
  *  \return -\c 1, when an error occurs (the actual situation is reported in <tt>errno</tt>)
  */
-
 int semUp (int semgid, unsigned int sindex)
 {
   struct sembuf up = { 0, 1, 0 };                                                           /* specific up operation */
