@@ -14,5 +14,5 @@ fi
 for i in $(seq 1 $n)
 do
      echo -e "\n\e[34;1mRun n.º $i\e[0m"
-     ./probSemSharedMemSoccerGame
+     ./filter.sh
 done

@@ -200,7 +200,6 @@ static int goalieConstituteTeam (int id)
 			}
 			count++;
 		} while(count != 4);
-		sh->fSt.st.goalieStat[id] = (sh->fSt.teamId==1) ? WAITING_START_1 : WAITING_START_2;
 		if (semUp (semgid, sh->mutex) == -1) {                                                         /* exit critical region */
    	        perror ("error on the down operation for semaphore access (GL)");
    	        exit (EXIT_FAILURE);
@@ -221,6 +220,8 @@ static int goalieConstituteTeam (int id)
     	perror ("error on the down operation for semaphore access of goaliesWaitTeam (GL)");
    		exit (EXIT_FAILURE);
    	}
+   	sh->fSt.st.goalieStat[id] = (sh->fSt.teamId==1) ? WAITING_START_1 : WAITING_START_2;
+   	ret = sh->fSt.teamId;
    	if(semUp(semgid,sh->playerRegistered) == -1){
    	   	perror ("error on the down operation for semaphore access of goaliesWaitTeam (GL)");
    	 	exit (EXIT_FAILURE);
@@ -245,7 +246,7 @@ static void waitReferee (int id, int team)
     }
 
     /* TODO: insert your code here */
-
+		sh->fSt.st.goalieStat[id] = (team==1) ? WAITING_START_1 : WAITING_START_2;
     if (semUp (semgid, sh->mutex) == -1) {                                                         /* exit critical region */
         perror ("error on the down operation for semaphore access (GL)");
         exit (EXIT_FAILURE);
