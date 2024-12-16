@@ -224,6 +224,14 @@ static void startGame ()
 	    }
 	    count++;
     }
+    count=0;
+    	while(count<NUMPLAYERS){
+        	if (semDown(semgid, sh->playing) == -1) { 												/* get notified by players */
+        		perror("error on the up operation for playersWaitReferee");
+    			exit(EXIT_FAILURE);
+    		}
+        	count++;
+    	}
 }
 
 /**
@@ -241,18 +249,8 @@ static void play ()
     }
 
     /* TODO: insert your code here */
-    int count=0;
-        while(count<10){
-    	    if (semUp(semgid, sh->playing) == -1) { /* notify players */
-    	    	perror("error on the up operation for playersWaitReferee");
-    	    	exit(EXIT_FAILURE);
-    	    }
-    	    count++;
-        }
     sh->fSt.st.refereeStat = REFEREEING;
     saveState(nFic, &sh->fSt);
-    
-
     if (semUp (semgid, sh->mutex) == -1) {                                                        /* leave critical region */
         perror ("error on the up operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
@@ -276,16 +274,6 @@ static void endGame ()
     }
 
     /* TODO: insert your code here */
-    int count = 0;
-
-    while(count < 10){
-        if (semDown (semgid, sh->playing) == -1) {
-            perror ("error on the up operation for semaphore access (RF)");
-            exit (EXIT_FAILURE);
-        }
-        count ++;
-    }
-
     sh->fSt.st.refereeStat = ENDING_GAME;
     saveState(nFic, &sh->fSt);
 
@@ -296,12 +284,12 @@ static void endGame ()
     }
 
     /* TODO: insert your code here */
-	 count=0;
-	    while(count<10){
-		    if (semUp(semgid, sh->playersWaitEnd) == -1) { /* notify players */
-		    	perror("error on the up operation for playersWaitReferee");
-		    	exit(EXIT_FAILURE);
-		    }
-		    count++;
-	    }
+	int count=0;
+	while(count<NUMPLAYERS){
+		if (semUp(semgid, sh->playersWaitEnd) == -1) { /* notify players */
+			perror("error on the up operation for playersWaitReferee");
+		  	exit(EXIT_FAILURE);
+		}
+		count++;
+	}
 }
