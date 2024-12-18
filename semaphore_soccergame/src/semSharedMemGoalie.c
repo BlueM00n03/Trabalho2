@@ -207,6 +207,11 @@ static int goalieConstituteTeam (int id)
    	        perror ("error on the up operation for semaphore access (GL)");
    	        exit (EXIT_FAILURE);
         }
+        if (semUp (semgid, sh->refereeWaitTeams) == -1) {                                                         /* exit critical region */
+           	perror ("error on the up operation for semaphore access (GL)");
+        	exit (EXIT_FAILURE);
+		}
+        
 		return sh->fSt.teamId++;
     }													/*Goalie arrived on time but not enough teammates*/
 

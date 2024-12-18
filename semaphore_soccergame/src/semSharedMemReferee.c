@@ -144,7 +144,7 @@ static void arrive ()
 
     /* TODO: insert your code here */
     //Assumir que chega sempre primeiro??
-    sh->fSt.st.refereeStat = WAITING_TEAMS;
+    sh->fSt.st.refereeStat = ARRIVING;
     saveState(nFic, &sh->fSt);
     
 
@@ -183,7 +183,7 @@ static void waitForTeams ()
     }
 
     /* TODO: insert your code here */
-    for(int i = 0;i<2;i++){	
+    for(int i = 0;i<(NUMPLAYERS/(NUMTEAMPLAYERS+NUMTEAMPLAYERS));i++){	
 	    if (semDown (semgid, sh->refereeWaitTeams) == -1) {                                               
 	        perror ("error on the up operation for semaphore access of refereeWaitTeams (RF)");
 	        exit (EXIT_FAILURE);

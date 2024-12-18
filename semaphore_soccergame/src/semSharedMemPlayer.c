@@ -198,7 +198,6 @@ static int playerConstituteTeam (int id)
 	    saveState(nFic, &sh->fSt);
 	    int count = 0;
 	    do {
-	    	printf("count\n");
 			if(semUp(semgid,sh->playersWaitTeam) == -1){
 		    	perror ("error on the up operation for semaphore access of playersWaitTeam (PL)");
 				exit (EXIT_FAILURE);
@@ -208,8 +207,7 @@ static int playerConstituteTeam (int id)
 				exit (EXIT_FAILURE);
 			}
 			count++;
-		} while(count != 2);
-		
+		} while(count != NUMTEAMPLAYERS-1);
 		if(semUp(semgid,sh->goaliesWaitTeam) == -1){
 			perror ("error on the up operation for semaphore access of playersWaitTeam (PL)");
 			exit (EXIT_FAILURE);
@@ -217,12 +215,16 @@ static int playerConstituteTeam (int id)
 		if(semDown(semgid,sh->playerRegistered) == -1){
 			perror ("error on the down operation for semaphore access of playerRegistered (GL)");
 			exit (EXIT_FAILURE);
-		}	
-			
+		}			
 		if (semUp (semgid, sh->mutex) == -1) {                                                         /* exit critical region */
 	   	    perror ("error on the up operation for semaphore access (GL)");
 	   		exit (EXIT_FAILURE);
 	    }
+	    if (semUp (semgid, sh->refereeWaitTeams) == -1) {                                                         /* exit critical region */
+	        perror ("error on the up operation for semaphore access (GL)");
+	    	exit (EXIT_FAILURE);
+	    }
+	    
 		return sh->fSt.teamId++;
 	}													
 	
@@ -278,6 +280,8 @@ static void waitReferee (int id, int team)
 		perror ("error on the up operation for semaphore access of playersWaitReferee (GL)");
 	    exit (EXIT_FAILURE);
 	}
+	fprintf(stderr,"PLayer WIll PLay\n");
+	
 }
 
 /**

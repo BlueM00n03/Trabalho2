@@ -94,6 +94,8 @@ int main (int argc, char *argv[])
         exit (EXIT_FAILURE);
     }
 
+    printf("Key = %x\n", key);
+
     /* creating and initializing the shared memory region and the log file */
     if ((shmid = shmemCreate (key, sizeof (SHARED_DATA))) == -1) { 
         perror ("error on creating the shared memory region");
