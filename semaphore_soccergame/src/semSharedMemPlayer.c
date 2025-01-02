@@ -179,7 +179,7 @@ static int playerConstituteTeam (int id)
         exit (EXIT_FAILURE);
     }
 	int player_type = 0;																			// Flag to determine out of critical region actions; 0-LATE, 1-Forming, 2- Waiting
-    if(++sh->fSt.playersArrived >8){ 																// Player is late so it only changes its state */
+    if(++sh->fSt.playersArrived >8){ 																// Player is late so it only changes its state
     	sh->fSt.st.playerStat[id]= LATE;
         saveState(nFic, &sh->fSt);
 	}

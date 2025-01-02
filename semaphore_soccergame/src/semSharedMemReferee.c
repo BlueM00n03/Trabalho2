@@ -142,7 +142,7 @@ static void arrive ()
         exit (EXIT_FAILURE);
     }
 
-    sh->fSt.st.refereeStat = ARRIVING; 																// They should all be in this state already
+    sh->fSt.st.refereeStat = ARRIVINGR; 																// They should all be in this state already
     saveState(nFic, &sh->fSt);
 
     if (semUp (semgid, sh->mutex) == -1) {                                                        	/* leave critical region */
