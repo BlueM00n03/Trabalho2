@@ -142,7 +142,7 @@ static void arrive ()
         exit (EXIT_FAILURE);
     }
 
-    sh->fSt.st.refereeStat = ARRIVING; 												//They should all be in this state already
+    sh->fSt.st.refereeStat = ARRIVING; 												// They should all be in this state already
     saveState(nFic, &sh->fSt);
 
     if (semUp (semgid, sh->mutex) == -1) {                                                        /* leave critical region */
@@ -176,8 +176,8 @@ static void waitForTeams ()
         exit (EXIT_FAILURE);
     }
 
-    for(int i = 0;i<(NUMPLAYERS/(NUMTEAMPLAYERS+NUMTEAMPLAYERS));i++){							//For all teams
-	    if (semDown (semgid, sh->refereeWaitTeams) == -1) {                                     //Wait for until a team is formed
+    for(int i = 0;i<(NUMPLAYERS/(NUMTEAMPLAYERS+NUMTEAMGOALIES));i++){							//For all teams
+	    if (semDown (semgid, sh->refereeWaitTeams) == -1) {                                     //Wait until a team is formed
 	        perror ("error on the down operation for semaphore access of refereeWaitTeams (RF)");
 	        exit (EXIT_FAILURE);
 	    }
