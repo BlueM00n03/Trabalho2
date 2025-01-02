@@ -137,15 +137,15 @@ int main (int argc, char *argv[])
  */
 static void arrive ()
 {
-    if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
+    if (semDown (semgid, sh->mutex) == -1) {                                                      	/* enter critical region */
         perror ("error on the down operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
 
-    sh->fSt.st.refereeStat = ARRIVING; 												// They should all be in this state already
+    sh->fSt.st.refereeStat = ARRIVING; 																// They should all be in this state already
     saveState(nFic, &sh->fSt);
 
-    if (semUp (semgid, sh->mutex) == -1) {                                                        /* leave critical region */
+    if (semUp (semgid, sh->mutex) == -1) {                                                        	/* leave critical region */
         perror ("error on the up operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
@@ -163,21 +163,21 @@ static void arrive ()
  */
 static void waitForTeams ()
 {
-    if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
-        perror ("error on the up operation for semaphore access (RF)");
+    if (semDown (semgid, sh->mutex) == -1) {                                                      	/* enter critical region */
+        perror ("error on the down operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
 
-    sh->fSt.st.refereeStat = WAITING_TEAMS;                //Change state
+    sh->fSt.st.refereeStat = WAITING_TEAMS;                											// Change state
     saveState(nFic, &sh->fSt);   
 
-    if (semUp (semgid, sh->mutex) == -1) {                                                        /* leave critical region */
+    if (semUp (semgid, sh->mutex) == -1) {                                                        	/* leave critical region */
         perror ("error on the up operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
-
-    for(int i = 0;i<(NUMPLAYERS/(NUMTEAMPLAYERS+NUMTEAMGOALIES));i++){							//For all teams
-	    if (semDown (semgid, sh->refereeWaitTeams) == -1) {                                     //Wait until a team is formed
+    
+    for(int i = 0;i<(NUMPLAYERS/(NUMTEAMPLAYERS+NUMTEAMGOALIES));i++){								// For all teams
+	    if (semDown (semgid, sh->refereeWaitTeams) == -1) {                                     	// Wait until a team is formed
 	        perror ("error on the down operation for semaphore access of refereeWaitTeams (RF)");
 	        exit (EXIT_FAILURE);
 	    }
@@ -194,26 +194,26 @@ static void waitForTeams ()
  */
 static void startGame ()
 {
-    if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
+    if (semDown (semgid, sh->mutex) == -1) {                                                      	/* enter critical region */
         perror ("error on the down operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
 
-    sh->fSt.st.refereeStat = STARTING_GAME; 											//Change State
+    sh->fSt.st.refereeStat = STARTING_GAME; 														// Change State
     saveState(nFic, &sh->fSt);   
 
-    if (semUp (semgid, sh->mutex) == -1) {                                                        /* leave critical region */
+    if (semUp (semgid, sh->mutex) == -1) {                                                        	/* leave critical region */
         perror ("error on the up operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
 
     int count=0;
     while(count<NUMPLAYERS){
-	    if (semUp(semgid, sh->playersWaitReferee) == -1) { 								/* notify players that referee is ready */
+	    if (semUp(semgid, sh->playersWaitReferee) == -1) { 											// Notify players that referee is ready */
 	    	perror("error on the up operation for semaphore access of playersWaitReferee (RF)");
 	    	exit(EXIT_FAILURE);
 	    }
-	    if (semDown(semgid, sh->playing) == -1) { 												/* get notified by players */
+	    if (semDown(semgid, sh->playing) == -1) { 													// Get notified by players 
 	        perror("error on the down operation for semaphore access of playing (RF)");
 	   		exit(EXIT_FAILURE);
 	    }
@@ -230,15 +230,15 @@ static void startGame ()
  */
 static void play ()
 {
-    if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
+    if (semDown (semgid, sh->mutex) == -1) {                                                      	/* enter critical region */
         perror ("error on the down operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
 
-    sh->fSt.st.refereeStat = REFEREEING; 														// Change State
+    sh->fSt.st.refereeStat = REFEREEING; 															// Change State
     saveState(nFic, &sh->fSt);
 
-    if (semUp (semgid, sh->mutex) == -1) {                                                        /* leave critical region */
+    if (semUp (semgid, sh->mutex) == -1) {                                                        	/* leave critical region */
         perror ("error on the up operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
@@ -255,7 +255,7 @@ static void play ()
  */
 static void endGame ()
 {
-    if (semDown (semgid, sh->mutex) == -1) {                                                      /* enter critical region */
+    if (semDown (semgid, sh->mutex) == -1) {                                                      	/* enter critical region */
         perror ("error on the down operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
@@ -263,14 +263,14 @@ static void endGame ()
     sh->fSt.st.refereeStat = ENDING_GAME; 															// Change State
     saveState(nFic, &sh->fSt);
 
-    if (semUp (semgid, sh->mutex) == -1) {                                                        /* leave critical region */
+    if (semUp (semgid, sh->mutex) == -1) {                                                        	/* leave critical region */
         perror ("error on the up operation for semaphore access (RF)");
         exit (EXIT_FAILURE);
     }
 
 	int count=0;
 	while(count<NUMPLAYERS){
-		if (semUp(semgid, sh->playersWaitEnd) == -1) {												/* notify players */
+		if (semUp(semgid, sh->playersWaitEnd) == -1) {												// Notify players of match end
 			perror("error on the up operation for playersWaitEnd (RF)");
 		  	exit(EXIT_FAILURE);
 		}
